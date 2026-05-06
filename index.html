@@ -1,0 +1,617 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>초정밀 성격유형 테스트</title>
+  <style>
+    :root {
+      --bg: #fff7fb;
+      --card: rgba(255, 255, 255, 0.86);
+      --text: #2f2630;
+      --muted: #7a6875;
+      --primary: #ff78aa;
+      --primary-dark: #e94f8c;
+      --secondary: #fff0f6;
+      --border: #ffd3e5;
+      --shadow: 0 24px 70px rgba(255, 120, 170, 0.18);
+      --radius: 28px;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      font-family: -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", "Pretendard", "Noto Sans KR", sans-serif;
+      color: var(--text);
+      background:
+        radial-gradient(circle at 15% 10%, #ffe1ee 0 18%, transparent 32%),
+        radial-gradient(circle at 90% 20%, #fff1b8 0 12%, transparent 28%),
+        radial-gradient(circle at 50% 96%, #e9f8ff 0 18%, transparent 36%),
+        linear-gradient(135deg, #fff7fb 0%, #fffdf5 100%);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 22px;
+      overflow-x: hidden;
+    }
+
+    .sparkle {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      overflow: hidden;
+      z-index: 0;
+    }
+
+    .sparkle span {
+      position: absolute;
+      display: block;
+      opacity: 0.38;
+      animation: float 8s ease-in-out infinite;
+      font-size: 20px;
+    }
+
+    .sparkle span:nth-child(1) { top: 10%; left: 8%; animation-delay: 0s; }
+    .sparkle span:nth-child(2) { top: 20%; right: 9%; animation-delay: 1.3s; }
+    .sparkle span:nth-child(3) { bottom: 14%; left: 13%; animation-delay: 2.1s; }
+    .sparkle span:nth-child(4) { bottom: 18%; right: 15%; animation-delay: 3.2s; }
+    .sparkle span:nth-child(5) { top: 50%; left: 4%; animation-delay: 4.1s; }
+    .sparkle span:nth-child(6) { top: 62%; right: 5%; animation-delay: 5s; }
+
+    @keyframes float {
+      0%, 100% { transform: translateY(0) rotate(0deg); }
+      50% { transform: translateY(-18px) rotate(8deg); }
+    }
+
+    main {
+      width: min(100%, 470px);
+      position: relative;
+      z-index: 1;
+    }
+
+    .card {
+      background: var(--card);
+      border: 1px solid rgba(255, 211, 229, 0.8);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(18px);
+      padding: 28px;
+      min-height: 610px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .card::before {
+      content: "";
+      position: absolute;
+      width: 220px;
+      height: 220px;
+      border-radius: 50%;
+      background: rgba(255, 120, 170, 0.08);
+      top: -90px;
+      right: -80px;
+    }
+
+    .brand {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      align-self: flex-start;
+      padding: 8px 12px;
+      border-radius: 999px;
+      background: #fff;
+      border: 1px solid var(--border);
+      color: var(--primary-dark);
+      font-size: 13px;
+      font-weight: 800;
+      margin-bottom: 18px;
+    }
+
+    h1 {
+      margin: 0 0 10px;
+      font-size: 34px;
+      line-height: 1.12;
+      letter-spacing: -0.04em;
+    }
+
+    h2 {
+      margin: 0 0 16px;
+      font-size: 25px;
+      line-height: 1.25;
+      letter-spacing: -0.035em;
+    }
+
+    p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 15.5px;
+      line-height: 1.68;
+    }
+
+    .hero-emoji {
+      font-size: 54px;
+      margin: 12px 0 10px;
+      animation: bounce 1.7s ease-in-out infinite;
+    }
+
+    @keyframes bounce {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-8px); }
+    }
+
+    .field {
+      margin-top: 28px;
+    }
+
+    label {
+      display: block;
+      font-size: 14px;
+      font-weight: 800;
+      margin-bottom: 9px;
+      color: #4a3947;
+    }
+
+    input {
+      width: 100%;
+      border: 1.5px solid var(--border);
+      border-radius: 18px;
+      padding: 16px 17px;
+      outline: none;
+      font-size: 17px;
+      background: rgba(255, 255, 255, 0.92);
+      transition: 0.2s ease;
+    }
+
+    input:focus {
+      border-color: var(--primary);
+      box-shadow: 0 0 0 5px rgba(255, 120, 170, 0.12);
+    }
+
+    .button {
+      border: 0;
+      width: 100%;
+      border-radius: 18px;
+      padding: 16px 18px;
+      margin-top: 18px;
+      background: linear-gradient(135deg, var(--primary), #ff9f7a);
+      color: white;
+      font-size: 16px;
+      font-weight: 900;
+      cursor: pointer;
+      box-shadow: 0 12px 25px rgba(255, 120, 170, 0.28);
+      transition: transform 0.16s ease, box-shadow 0.16s ease;
+    }
+
+    .button:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 16px 32px rgba(255, 120, 170, 0.33);
+    }
+
+    .button:active {
+      transform: translateY(0);
+    }
+
+    .button.secondary {
+      background: #fff;
+      color: var(--primary-dark);
+      border: 1.5px solid var(--border);
+      box-shadow: none;
+    }
+
+    .progress-wrap {
+      margin-bottom: 22px;
+    }
+
+    .progress-meta {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      color: var(--muted);
+      font-size: 13px;
+      font-weight: 800;
+      margin-bottom: 9px;
+    }
+
+    .progress {
+      height: 10px;
+      background: #ffe8f1;
+      border-radius: 999px;
+      overflow: hidden;
+    }
+
+    .progress-bar {
+      height: 100%;
+      width: 0%;
+      background: linear-gradient(90deg, var(--primary), #ffbf69);
+      border-radius: inherit;
+      transition: width 0.28s ease;
+    }
+
+    .question {
+      font-size: 23px;
+      font-weight: 900;
+      line-height: 1.35;
+      letter-spacing: -0.03em;
+      margin-bottom: 18px;
+    }
+
+    .answers {
+      display: grid;
+      gap: 11px;
+    }
+
+    .answer {
+      border: 1.5px solid var(--border);
+      background: rgba(255, 255, 255, 0.9);
+      border-radius: 18px;
+      padding: 15px 16px;
+      text-align: left;
+      cursor: pointer;
+      font-size: 15.5px;
+      color: var(--text);
+      font-weight: 750;
+      transition: 0.16s ease;
+    }
+
+    .answer:hover {
+      border-color: var(--primary);
+      background: #fff7fb;
+      transform: translateX(3px);
+    }
+
+    .loading-list {
+      display: grid;
+      gap: 13px;
+      margin-top: 28px;
+    }
+
+    .loading-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 13px 14px;
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      background: rgba(255, 255, 255, 0.72);
+      color: var(--muted);
+      font-weight: 800;
+      font-size: 14px;
+      opacity: 0.42;
+      transform: translateY(8px);
+      transition: 0.35s ease;
+    }
+
+    .loading-item.active {
+      opacity: 1;
+      transform: translateY(0);
+      color: var(--text);
+      background: #fff;
+    }
+
+    .spinner {
+      width: 38px;
+      height: 38px;
+      border: 4px solid #ffe1ee;
+      border-top-color: var(--primary);
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+      margin: 22px auto 8px;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    .result-type {
+      display: grid;
+      place-items: center;
+      width: 124px;
+      height: 124px;
+      margin: 8px auto 20px;
+      border-radius: 34px;
+      background: linear-gradient(135deg, #fff, #fff0f6);
+      border: 1.5px solid var(--border);
+      box-shadow: 0 18px 42px rgba(255, 120, 170, 0.16);
+      text-align: center;
+    }
+
+    .result-type strong {
+      font-size: 32px;
+      letter-spacing: -0.05em;
+      color: var(--primary-dark);
+    }
+
+    .result-type span {
+      display: block;
+      font-size: 11px;
+      color: var(--muted);
+      font-weight: 900;
+      margin-top: 2px;
+    }
+
+    .result-box {
+      background: #fff;
+      border: 1.5px solid var(--border);
+      border-radius: 22px;
+      padding: 18px;
+      margin-top: 16px;
+    }
+
+    .result-box ul {
+      margin: 10px 0 0;
+      padding-left: 20px;
+      color: #4b3c49;
+      line-height: 1.75;
+      font-size: 14.8px;
+    }
+
+    .recommend {
+      margin-top: 16px;
+      padding: 16px;
+      border-radius: 20px;
+      background: #fff5c9;
+      border: 1px solid #ffe89a;
+      color: #5a4710;
+      font-size: 14.5px;
+      line-height: 1.65;
+      font-weight: 800;
+    }
+
+    .toast {
+      position: fixed;
+      left: 50%;
+      bottom: 24px;
+      width: min(calc(100% - 32px), 430px);
+      transform: translate(-50%, 18px);
+      background: rgba(47, 38, 48, 0.92);
+      color: #fff;
+      padding: 14px 16px;
+      border-radius: 16px;
+      font-size: 14px;
+      font-weight: 800;
+      opacity: 0;
+      pointer-events: none;
+      transition: 0.25s ease;
+      z-index: 10;
+      text-align: center;
+    }
+
+    .toast.show {
+      opacity: 1;
+      transform: translate(-50%, 0);
+    }
+
+    .hidden {
+      display: none !important;
+    }
+
+    .tiny {
+      margin-top: 14px;
+      font-size: 12px;
+      text-align: center;
+      color: #9b8795;
+    }
+
+    @media (max-width: 420px) {
+      body { padding: 14px; }
+      .card { padding: 23px; min-height: 590px; border-radius: 24px; }
+      h1 { font-size: 30px; }
+      .question { font-size: 21px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="sparkle" aria-hidden="true">
+    <span>✦</span><span>♡</span><span>✧</span><span>☁️</span><span>🍓</span><span>✨</span>
+  </div>
+
+  <main>
+    <section class="card" id="app"></section>
+  </main>
+
+  <div class="toast" id="toast"></div>
+
+  <script>
+    const app = document.getElementById("app");
+    const toast = document.getElementById("toast");
+
+    const questions = [
+      {
+        q: "쉬는 날의 나는 어떤 쪽에 가까울까?",
+        a: ["침대에서 조용히 충전한다", "갑자기 약속을 잡고 나간다", "맛있는 걸 찾아 헤맨다", "아무것도 안 하지만 바쁘다"]
+      },
+      {
+        q: "누가 부탁을 하면 나는 보통?",
+        a: ["일단 들어보고 결정한다", "바로 도와주는 편이다", "귀찮지만 결국 해준다", "못 들은 척할 때도 있다"]
+      },
+      {
+        q: "내가 가장 자주 하는 말과 가까운 것은?",
+        a: ["진짜?", "왜?", "귀찮아", "나중에"]
+      },
+      {
+        q: "지금 내게 가장 필요한 에너지는?",
+        a: ["충분한 휴식", "맛있는 간식", "약간의 용돈", "누군가의 따뜻한 허락"]
+      },
+      {
+        q: "나는 사실 이런 사람이다.",
+        a: ["생각보다 섬세하다", "은근히 귀엽다", "배고프면 예민하다", "가끔 말을 잘 들어야 한다"]
+      }
+    ];
+
+    const state = {
+      name: "",
+      step: 0,
+      answers: []
+    };
+
+    function showToast(message) {
+      toast.textContent = message;
+      toast.classList.add("show");
+      setTimeout(() => toast.classList.remove("show"), 1800);
+    }
+
+    function renderStart() {
+      app.innerHTML = `
+        <div class="brand">✨ 2026 최신 성향 분석</div>
+        <div class="hero-emoji">🧸</div>
+        <h1>초정밀<br />성격유형 테스트</h1>
+        <p>이름과 5개의 간단한 질문으로 나도 몰랐던 숨겨진 성향을 분석해드려요. 결과는 개인 성향, 생활 패턴, 대화 습관을 바탕으로 생성됩니다.</p>
+        <div class="field">
+          <label for="nameInput">이름 또는 별명을 입력해주세요</label>
+          <input id="nameInput" maxlength="10" placeholder="예: 지우" autocomplete="off" />
+        </div>
+        <button class="button" onclick="startTest()">성격 분석 시작하기</button>
+        <p class="tiny">약 30초 소요 · 재미로 보는 심리 콘텐츠</p>
+      `;
+      setTimeout(() => document.getElementById("nameInput").focus(), 80);
+    }
+
+    function startTest() {
+      const input = document.getElementById("nameInput");
+      const value = input.value.trim();
+      if (!value) {
+        showToast("이름을 먼저 입력해주세요 🐾");
+        input.focus();
+        return;
+      }
+      state.name = value;
+      state.step = 0;
+      state.answers = [];
+      renderQuestion();
+    }
+
+    function renderQuestion() {
+      const current = questions[state.step];
+      const progress = Math.round((state.step / questions.length) * 100);
+      app.innerHTML = `
+        <div class="progress-wrap">
+          <div class="progress-meta">
+            <span>Q${state.step + 1}. ${state.name}님의 패턴 분석</span>
+            <span>${state.step + 1}/${questions.length}</span>
+          </div>
+          <div class="progress"><div class="progress-bar" style="width:${progress}%"></div></div>
+        </div>
+        <div class="brand">🌷 답변은 신중하게 골라주세요</div>
+        <div class="question">${current.q}</div>
+        <div class="answers">
+          ${current.a.map((answer, index) => `<button class="answer" onclick="chooseAnswer(${index})">${answer}</button>`).join("")}
+        </div>
+      `;
+      requestAnimationFrame(() => {
+        const bar = document.querySelector(".progress-bar");
+        if (bar) bar.style.width = `${Math.round(((state.step + 1) / questions.length) * 100)}%`;
+      });
+    }
+
+    function chooseAnswer(index) {
+      state.answers.push(index);
+      if (state.step < questions.length - 1) {
+        state.step += 1;
+        renderQuestion();
+      } else {
+        renderLoading();
+      }
+    }
+
+    function renderLoading() {
+      app.innerHTML = `
+        <div class="brand">🔎 AI 성향 분석 진행 중</div>
+        <h2>${state.name}님의 답변을 분석하고 있어요</h2>
+        <p>답변의 흐름, 선택 패턴, 생활 습관, 대화 반응을 종합해 가장 가까운 성격유형을 찾는 중입니다.</p>
+        <div class="spinner"></div>
+        <div class="loading-list">
+          <div class="loading-item" id="load0">🌙 휴식 선호도 계산 중...</div>
+          <div class="loading-item" id="load1">🍪 간식 반응성 측정 중...</div>
+          <div class="loading-item" id="load2">💬 말대꾸 빈도 추정 중...</div>
+          <div class="loading-item" id="load3">🧠 숨겨진 성향 조합 중...</div>
+          <div class="loading-item" id="load4">👑 언니 말 청취 가능성 분석 중...</div>
+        </div>
+      `;
+
+      for (let i = 0; i < 5; i++) {
+        setTimeout(() => {
+          const item = document.getElementById(`load${i}`);
+          if (item) item.classList.add("active");
+        }, 450 + i * 650);
+      }
+
+      setTimeout(renderResult, 4300);
+    }
+
+    function renderResult() {
+      app.innerHTML = `
+        <div class="brand">🎉 분석 완료</div>
+        <h2>${state.name}님의 성격 유형은...</h2>
+        <div class="result-type">
+          <div>
+            <strong>USJD</strong>
+            <span>TYPE</span>
+          </div>
+        </div>
+        <p style="text-align:center;"><b>Unni Saying Just Do-it</b><br />언니가 시키면 지체 말고 당장 하기형</p>
+        <div class="result-box">
+          <b>유형 해석</b>
+          <ul>
+            <li><b>U</b>: 언니가</li>
+            <li><b>S</b>: 시키면</li>
+            <li><b>J</b>: 지체 말고</li>
+            <li><b>D</b>: 당장 하기</li>
+          </ul>
+        </div>
+        <div class="result-box">
+          <b>${state.name}님의 핵심 특징</b>
+          <ul>
+            <li>자유로운 척하지만 언니 말을 들으면 안정되는 타입</li>
+            <li>귀찮다고 말해도 결국 할 가능성이 높음</li>
+            <li>말대꾸를 하면 오늘의 간식운이 하락할 수 있음</li>
+            <li>언니가 부르면 일단 대답하는 것이 길함</li>
+          </ul>
+        </div>
+        <div class="recommend">
+          최종 결론:<br />
+          ${state.name}님은 오늘부터 언니 말을 잘 들어야 합니다~!!<br /><br />
+          추천 행동: 지금 바로 언니에게<br />“언니가 제일 좋아”라고 보내기 💌
+        </div>
+        <button class="button" onclick="shareResult()">결과 공유하기</button>
+        <button class="button secondary" onclick="retryTest()">다시 테스트하기</button>
+      `;
+    }
+
+    async function shareResult() {
+      const text = `${state.name}님의 성격 유형은 USJD형!\n결론: 언니 말을 잘 들어야 합니다~!!`;
+      if (navigator.share) {
+        try {
+          await navigator.share({ title: "초정밀 성격유형 테스트", text, url: location.href });
+        } catch (e) {
+          showToast("공유 전 필수 문구: 언니 말 잘 듣겠습니다 😌");
+        }
+      } else {
+        try {
+          await navigator.clipboard.writeText(`${text}\n${location.href}`);
+          showToast("결과가 복사됐어요. 언니에게 보고하세요 💌");
+        } catch (e) {
+          showToast("공유 전 필수 문구: 언니 말 잘 듣겠습니다 😌");
+        }
+      }
+    }
+
+    function retryTest() {
+      showToast("이미 결과는 정해졌습니다. 운명을 받아들이세요 🐹");
+      setTimeout(() => {
+        state.step = 0;
+        state.answers = [];
+        renderQuestion();
+      }, 950);
+    }
+
+    renderStart();
+  </script>
+</body>
+</html>
